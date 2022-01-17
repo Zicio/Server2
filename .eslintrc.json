@@ -1,0 +1,14 @@
+{
+  "extends": "koa",
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      "LabeledStatement",
+      "WithStatement"
+    ],
+    "no-unused-vars": "off",
+    "no-unused-expressions": "warn",
+    "no-plusplus": "warn",
+    "no-fallthrough": "off"
+  }
+}
