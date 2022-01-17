@@ -46,9 +46,9 @@ const getDate = () => {
   };
 };
 
-router.get('/user:name', async ctx => {
+router.get('/user/:name', async ctx => {
   const index = users.findIndex(({ name }) => name === ctx.params.name);
-  if (!index) {
+  if (index === -1) {
     ctx.response.status = 200;
     return;
   }
@@ -56,5 +56,6 @@ router.get('/user:name', async ctx => {
   ctx.response.body = `Имя пользователя ${ctx.params.name} уже занято!`;
 });
 
+app.use(router.routes()).use(router.allowedMethods());
 const port = process.env.PORT || 7070;
 app.listen(port);

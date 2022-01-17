@@ -1,1 +1,1 @@
-https://zicio-heroku.herokuapp.com/
+https://zicio-chat.herokuapp.com/
