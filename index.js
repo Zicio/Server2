@@ -56,7 +56,7 @@ router.get('/users/:name', async ctx => {
     return;
   }
   ctx.response.status = 400;
-  ctx.response.body = `Имя пользователя ${ctx.params.name} уже занято!`;
+  ctx.response.body = `Имя пользователя "${ctx.params.name}" уже занято!`;
 });
 
 app.use(router.routes()).use(router.allowedMethods());
