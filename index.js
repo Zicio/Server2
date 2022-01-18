@@ -46,10 +46,11 @@ const getDate = () => {
   };
 };
 
-router.get('/user/:name', async ctx => {
+router.get('/users/:name', async ctx => {
   const index = users.findIndex(({ name }) => name === ctx.params.name);
   if (index === -1) {
     ctx.response.status = 200;
+    ctx.response.body = users;
     return;
   }
   ctx.response.status = 400;
