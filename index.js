@@ -3,6 +3,7 @@ const koaBody = require('koa-body');
 const cors = require('@koa/cors');
 const Router = require('@koa/router');
 const router = new Router();
+const WS = require('ws');
 
 const app = new Koa();
 app.use(cors());
@@ -61,4 +62,10 @@ router.get('/users/:name', async ctx => {
 
 app.use(router.routes()).use(router.allowedMethods());
 const port = process.env.PORT || 7070;
+const wsServer = new WS.Server({ port });
+
+
+
+
+
 app.listen(port);
