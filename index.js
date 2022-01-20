@@ -64,8 +64,15 @@ app.use(router.routes()).use(router.allowedMethods());
 const port = process.env.PORT || 7070;
 const wsServer = new WS.Server({ port });
 
-
-
-
+wsServer.on('connection', (ws, req) => {
+  ws.on('message', msg => {
+    [...wsServer.clients]
+      .filter(o => o.readyState === WS.OPEN)
+      .forEach(o => o.send('msg'));
+  });
+  [...wsServer.clients]
+    .filter(o => o.readyState === WS.OPEN)
+    .forEach(o => o.send(users[users.length - 1]));
+});
 
 app.listen(port);
