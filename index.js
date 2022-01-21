@@ -75,4 +75,4 @@ wsServer.on('connection', (ws, req) => {
     .forEach(o => o.send(users[users.length - 1]));
 });
 
-port.listen(port);
+app.listen(port);
