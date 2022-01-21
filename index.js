@@ -47,6 +47,7 @@ const getDate = () => {
 };
 
 router.get('/users/:name', async ctx => {
+  ctx.response.set({ 'Access-Control-Allow-Origin': '*' });
   const index = users.findIndex(({ name }) => name === ctx.params.name);
   if (index === -1) {
     const { v4: uuidv4 } = require('uuid');
