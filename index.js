@@ -54,12 +54,10 @@ router.get('/users/:name', async ctx => {
     users.push({ id: newId, name: ctx.params.name });
     ctx.response.status = 200;
     ctx.response.body = users;
-    ctx.response.set({ 'Access-Control-Allow-Origin': '*' });
     return;
   }
   ctx.response.status = 400;
   ctx.response.body = `Имя пользователя "${ctx.params.name}" уже занято!`;
-  ctx.response.set({ 'Access-Control-Allow-Origin': '*' });
 });
 
 app.use(router.routes()).use(router.allowedMethods());
