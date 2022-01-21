@@ -1,3 +1,4 @@
+const http = require('http');
 const Koa = require('koa');
 const koaBody = require('koa-body');
 const cors = require('@koa/cors');
@@ -97,8 +98,9 @@ router.get('/users/:name', async ctx => {
 });
 
 app.use(router.routes()).use(router.allowedMethods());
-const port = process.env.PORT || 7050;
-const wsServer = new WS.Server({ port });
+const port = process.env.PORT || 7000;
+const server = http.createServer(app.callback());
+const wsServer = new WS.Server({ server });
 
 wsServer.on('connection', (ws, req) => {
   ws.on('message', msg => {
@@ -111,4 +113,4 @@ wsServer.on('connection', (ws, req) => {
     .forEach(o => o.send(users[users.length - 1]));
 });
 
-app.listen(port);
+server.listen(port);
