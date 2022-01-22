@@ -8,38 +8,6 @@ const WS = require('ws');
 
 const app = new Koa();
 
-// app.use(async(ctx, next) => {
-//   const origin = ctx.request.get('Origin');
-//   if (!origin) {
-//     return await next();
-//   }
-
-//   const headers = { 'Access-Control-Allow-Origin': '*', };
-
-//   if (ctx.request.method !== 'OPTIONS') {
-//     ctx.response.set({ ...headers });
-//     try {
-//       return await next();
-//     } catch (e) {
-//       e.headers = { ...e.headers, ...headers };
-//       throw e;
-//     }
-//   }
-
-//   if (ctx.request.get('Access-Control-Request-Method')) {
-//     ctx.response.set({
-//       ...headers,
-//       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH',
-//     });
-
-//     if (ctx.request.get('Access-Control-Request-Headers')) {
-//       ctx.response.set('Access-Control-Allow-Headers', ctx.request.get('Access-Control-Request-Headers'));
-//     }
-
-//     ctx.response.status = 204;
-//   }
-// });
-
 const options = {
   origin: '*'
 };
@@ -57,31 +25,32 @@ const users = [
   { id: '2', name: 'BBB' }
 ];
 
-const format = date => {
-  if (date < 10) {
-    date = '0' + date;
-  }
-  return date;
-};
+// !На будушее
+// const format = date => {
+//   if (date < 10) {
+//     date = '0' + date;
+//   }
+//   return date;
+// };
 
-const getDate = () => {
-  const date = new Date();
-  const month = format(date.getMonth() + 1);
-  const day = format(date.getDate());
-  let hour = format(date.getHours() + 4);
-  if (hour === 24) {
-    hour = 0;
-  }
-  const minute = format(date.getMinutes());
-  const year = +date.getFullYear().toString().slice(2);
-  return {
-    month,
-    day,
-    hour,
-    minute,
-    year
-  };
-};
+// const getDate = () => {
+//   const date = new Date();
+//   const month = format(date.getMonth() + 1);
+//   const day = format(date.getDate());
+//   let hour = format(date.getHours() + 4);
+//   if (hour === 24) {
+//     hour = 0;
+//   }
+//   const minute = format(date.getMinutes());
+//   const year = +date.getFullYear().toString().slice(2);
+//   return {
+//     month,
+//     day,
+//     hour,
+//     minute,
+//     year
+//   };
+// };
 
 router.get('/users/:name', async ctx => {
   const index = users.findIndex(({ name }) => name === ctx.params.name);
