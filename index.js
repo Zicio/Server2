@@ -75,11 +75,11 @@ const clients = new Set();
 
 wsServer.on('connection', (ws, req) => {
   // TODO доделать обработчик приема сообщений
-  // ws.on('message', msg => {
-  //   [...wsServer.clients]
-  //     .filter(o => o.readyState === WS.OPEN)
-  //     .forEach(o => o.send(msg));
-  // });
+  ws.on('message', msg => {
+    [...wsServer.clients]
+      .filter(o => o.readyState === WS.OPEN)
+      .forEach(o => o.send(msg));
+  });
   clients.add(WS);
   [...wsServer.clients]
     .filter(o => o.readyState === WS.OPEN)
