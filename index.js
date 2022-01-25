@@ -83,9 +83,7 @@ wsServer.on('connection', (ws, req) => {
   clients.add(WS);
   [...wsServer.clients]
     .filter(o => o.readyState === WS.OPEN)
-    //! ТЕСТ варианта
-    // .forEach(o => o.send(JSON.stringify(users)));
-    .forEach(o => o.send(JSON.stringify(clients)));
+    .forEach(o => o.send(JSON.stringify(users)));
 });
 
 server.listen(port);
