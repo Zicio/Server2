@@ -71,19 +71,25 @@ const port = process.env.PORT || 7000;
 const server = http.createServer(app.callback());
 const wsServer = new WS.Server({ server });
 
-const clients = new Set();
+// const clients = new Set();
 
 wsServer.on('connection', (ws, req) => {
   // TODO доделать обработчик приема сообщений
   ws.on('message', msg => {
-    [...wsServer.clients]
-      .filter(o => o.readyState === WS.OPEN)
-      .forEach(o => o.send(msg));
+    if (msg === 'connect') {
+      [...wsServer.clients]
+        .filter(o => o.readyState === WS.OPEN)
+        .forEach(o => o.send(JSON.stringify(users)));
+    }
+    // [...wsServer.clients]
+    //   .filter(o => o.readyState === WS.OPEN)
+    //   .forEach(o => o.send(msg));
   });
-  clients.add(WS);
-  [...wsServer.clients]
-    .filter(o => o.readyState === WS.OPEN)
-    .forEach(o => o.send(JSON.stringify(users)));
+  // clients.add(WS);
+  // [...wsServer.clients]
+  //   .filter(o => o.readyState === WS.OPEN)
+  //   .forEach(o => o.send(JSON.stringify(users)));
+  console.log('OPEN');
 });
 
 server.listen(port);
