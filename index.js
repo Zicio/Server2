@@ -74,15 +74,17 @@ const wsServer = new WS.Server({ server });
 wsServer.on('connection', (ws, req) => {
   // TODO доделать обработчик приема сообщений
   ws.on('message', msg => {
+    console.log(JSON.parse(msg));
     if (!JSON.parse(msg)) {
       console.log('ok');
       [...wsServer.clients]
         .filter(o => o.readyState === WS.OPEN)
         .forEach(o => o.send(JSON.stringify(users)));
+    } else {
+      [...wsServer.clients]
+        .filter(o => o.readyState === WS.OPEN)
+        .forEach(o => o.send(msg));
     }
-    // [...wsServer.clients]
-    //   .filter(o => o.readyState === WS.OPEN)
-    //   .forEach(o => o.send(msg));
   });
   console.log('OPEN');
 });
