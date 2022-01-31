@@ -25,6 +25,8 @@ const users = [
   { id: '2', name: 'BBB' }
 ];
 
+const message = [];
+
 // !На будушее
 // const format = date => {
 //   if (date < 10) {
@@ -71,21 +73,25 @@ const port = process.env.PORT || 7000;
 const server = http.createServer(app.callback());
 const wsServer = new WS.Server({ server });
 
+function requestHandler(msg) {
+  console.log(JSON.parse(msg));
+  console.log(`Пересылаем${msg}`);
+  if (!JSON.parse(msg)) {
+    console.log('ok');
+    [...wsServer.clients]
+      .filter(o => o.readyState === WS.OPEN)
+      .forEach(o => o.send(JSON.stringify(users)));
+  } else {
+    message.push(JSON.parse(msg));
+    [...wsServer.clients]
+      .filter(o => o.readyState === WS.OPEN)
+      .forEach(o => o.send(JSON.stringify(message[message.length - 1])));
+  }
+}
+
 wsServer.on('connection', (ws, req) => {
   // TODO доделать обработчик приема сообщений
-  ws.on('message', msg => {
-    console.log(JSON.parse(msg));
-    if (!JSON.parse(msg)) {
-      console.log('ok');
-      [...wsServer.clients]
-        .filter(o => o.readyState === WS.OPEN)
-        .forEach(o => o.send(JSON.stringify(users)));
-    } else {
-      [...wsServer.clients]
-        .filter(o => o.readyState === WS.OPEN)
-        .forEach(o => o.send(msg));
-    }
-  });
+  ws.on('message', msg => requestHandler(msg));
   console.log('OPEN');
 });
 
