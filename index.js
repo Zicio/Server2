@@ -25,7 +25,10 @@ const users = [
   { id: '2', name: 'BBB' }
 ];
 
-const message = [];
+const messages = [
+  { name: 'AAA', text: 'Hello!!!' },
+  { name: 'BBB', text: 'Hi' }
+];
 
 // !На будушее
 // const format = date => {
@@ -74,25 +77,26 @@ const server = http.createServer(app.callback());
 const wsServer = new WS.Server({ server });
 
 function requestHandler(msg) {
-  console.log(JSON.parse(msg));
-  console.log(`Пересылаем${msg}`);
+  const response = {
+    users,
+    messages
+  };
   if (!JSON.parse(msg)) {
     console.log('ok');
     [...wsServer.clients]
       .filter(o => o.readyState === WS.OPEN)
-      .forEach(o => o.send(JSON.stringify(users)));
+      .forEach(o => o.send(JSON.stringify(response)));
   } else {
-    message.push(JSON.parse(msg));
+    messages.push(JSON.parse(msg));
     [...wsServer.clients]
       .filter(o => o.readyState === WS.OPEN)
-      .forEach(o => o.send(JSON.stringify(message[message.length - 1])));
+      .forEach(o => o.send(JSON.stringify([messages[messages.length - 1]])));
   }
 }
 
 wsServer.on('connection', (ws, req) => {
-  // TODO доделать обработчик приема сообщений
   ws.on('message', msg => requestHandler(msg));
   console.log('OPEN');
 });
-
+y
 server.listen(port);
