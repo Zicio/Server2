@@ -26,8 +26,8 @@ const users = [
 ];
 
 const messages = [
-  { name: 'AAA', text: 'Hello!!!' },
-  { name: 'BBB', text: 'Hi' }
+  { name: 'AAA', text: 'Hello!!! 19:20, 20.12.21' },
+  { name: 'BBB', text: 'Hi 19:21, 20.12.21' }
 ];
 
 router.get('/users/:name', async ctx => {
