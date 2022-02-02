@@ -20,14 +20,16 @@ app.use(koaBody({
 }));
 
 /* data */
+const clients = [];
+
 const users = [
-  { id: '1', name: 'AAA' },
-  { id: '2', name: 'BBB' }
+  // { id: '1', name: 'AAA' },
+  // { id: '2', name: 'BBB' }
 ];
 
 const messages = [
-  { name: 'AAA 19:20, 20.12.21', text: 'Hello!!!' },
-  { name: 'BBB 19:21, 20.12.21', text: 'Hi' }
+  // { name: 'AAA 19:20, 20.12.21', text: 'Hello!!!' },
+  // { name: 'BBB 19:21, 20.12.21', text: 'Hi' }
 ];
 
 router.get('/users/:name', async ctx => {
@@ -67,9 +69,23 @@ function requestHandler(msg) {
   }
 }
 
-wsServer.on('connection', (ws, req) => {
+wsServer.on('connection', ws => {
+  console.log('Клиенты: ' + clients.length);
+  clients.push(ws);
+  console.log('Клиенты после добавления: ' + clients.length);
   ws.on('message', msg => requestHandler(msg));
   console.log('OPEN');
+});
+
+wsServer.on('close', ws => {
+  const index = clients.indexOf(ws);
+  clients.splice(index, 1);
+  const userOffline = users[index];
+  users.splice(index, 1);
+  console.log('Клиенты после удаления: ' + clients);
+  [...wsServer.clients]
+    .filter(o => o.readyState === WS.OPEN)
+    .forEach(o => o.send(JSON.stringify(userOffline)));
 });
 
 server.listen(port);
