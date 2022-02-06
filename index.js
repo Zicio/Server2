@@ -70,22 +70,25 @@ function requestHandler(msg) {
 }
 
 wsServer.on('connection', ws => {
+  const i = 0;
   console.log('Клиенты: ' + clients.length);
-  clients.push(ws);
+  clients.push(i);
   console.log('Клиенты после добавления: ' + clients.length);
   ws.on('message', msg => requestHandler(msg));
   console.log('OPEN');
-});
-
-wsServer.on('close', ws => {
-  const index = clients.indexOf(ws);
-  clients.splice(index, 1);
-  const userOffline = users[index];
-  users.splice(index, 1);
-  console.log('Клиенты после удаления: ' + clients);
-  [...wsServer.clients]
-    .filter(o => o.readyState === WS.OPEN)
-    .forEach(o => o.send(JSON.stringify(userOffline)));
+  ws.on('close', ws => {
+    console.log(clients);
+    const index = clients[i];
+    console.log('Индекс' + index);
+    clients.splice(i, 1);
+    console.log(users);
+    const userOffline = users[index];
+    console.log(userOffline);
+    users.splice(index, 1);
+    [...wsServer.clients]
+      .filter(o => o.readyState === WS.OPEN)
+      .forEach(o => o.send(JSON.stringify(userOffline)));
+  });
 });
 
 server.listen(port);
