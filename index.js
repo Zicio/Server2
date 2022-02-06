@@ -51,17 +51,16 @@ const port = process.env.PORT || 7000;
 const server = http.createServer(app.callback());
 const wsServer = new WS.Server({ server });
 
-function requestHandler(msg, ws) {
+function requestHandler(msg) {
   const response = {
     users,
     messages
   };
   if (!JSON.parse(msg)) {
     console.log('ok');
-    ws.send(JSON.stringify(response));
     [...wsServer.clients]
       .filter(o => o.readyState === WS.OPEN)
-      .forEach(o => o.send(JSON.stringify(users)));
+      .forEach(o => o.send(JSON.stringify(response)));
   } else {
     messages.push(JSON.parse(msg));
     [...wsServer.clients]
@@ -75,7 +74,7 @@ wsServer.on('connection', ws => {
   console.log('Клиенты: ' + clients.length);
   clients.push(i);
   console.log('Клиенты после добавления: ' + clients.length);
-  ws.on('message', msg => requestHandler(msg, ws));
+  ws.on('message', msg => requestHandler(msg));
   console.log('OPEN');
   ws.on('close', ws => {
     console.log(clients);
