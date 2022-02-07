@@ -20,7 +20,9 @@ app.use(koaBody({
 }));
 
 /* data */
-const clients = [];
+// const clients = [];
+
+const sockets = [];
 
 const users = [
   // { id: '1', name: 'AAA' },
@@ -51,16 +53,22 @@ const port = process.env.PORT || 7000;
 const server = http.createServer(app.callback());
 const wsServer = new WS.Server({ server });
 
-function requestHandler(msg) {
+function requestHandler(msg, ws) {
   const response = {
     users,
     messages
   };
   if (!JSON.parse(msg)) {
-    console.log('ok');
-    [...wsServer.clients]
-      .filter(o => o.readyState === WS.OPEN)
-      .forEach(o => o.send(JSON.stringify(response)));
+    console.log(sockets.length);
+    ws.send(JSON.stringify(response));
+    // [...wsServer.clients]
+    //   .filter(o => o.readyState === WS.OPEN)
+    //   .forEach(o => o.send(JSON.stringify(response)));
+    for (const socket of sockets) {
+      socket.send(JSON.stringify(users[users.length - 1]));
+    }
+    sockets.push(ws);
+    console.log(sockets.length);
   } else {
     messages.push(JSON.parse(msg));
     [...wsServer.clients]
@@ -70,25 +78,23 @@ function requestHandler(msg) {
 }
 
 wsServer.on('connection', ws => {
-  const i = 0;
-  console.log('Клиенты: ' + clients.length);
-  clients.push(i);
-  console.log('Клиенты после добавления: ' + clients.length);
-  ws.on('message', msg => requestHandler(msg));
+  // const i = 0;
+  // clients.push(i);
+  ws.on('message', msg => requestHandler(msg, ws));
   console.log('OPEN');
-  ws.on('close', ws => {
-    console.log(clients);
-    const index = clients[i];
-    console.log('Индекс' + index);
-    clients.splice(i, 1);
-    console.log(users);
-    const userOffline = users[index];
-    console.log(userOffline);
-    users.splice(index, 1);
-    [...wsServer.clients]
-      .filter(o => o.readyState === WS.OPEN)
-      .forEach(o => o.send(JSON.stringify(userOffline)));
-  });
+  // ws.on('close', ws => {
+  //   console.log(clients);
+  //   const index = clients[i];
+  //   console.log('Индекс' + index);
+  //   clients.splice(i, 1);
+  //   console.log(users);
+  //   const userOffline = users[index];
+  //   console.log(userOffline);
+  //   users.splice(index, 1);
+  //   [...wsServer.clients]
+  //     .filter(o => o.readyState === WS.OPEN)
+  //     .forEach(o => o.send(JSON.stringify(userOffline)));
+  // });
 });
 
 server.listen(port);
