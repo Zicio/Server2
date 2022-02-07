@@ -20,8 +20,6 @@ app.use(koaBody({
 }));
 
 /* data */
-// const clients = [];
-
 const sockets = [];
 
 const users = [
@@ -61,9 +59,6 @@ function requestHandler(msg, ws) {
   if (!JSON.parse(msg)) {
     console.log(sockets.length);
     ws.send(JSON.stringify(response));
-    // [...wsServer.clients]
-    //   .filter(o => o.readyState === WS.OPEN)
-    //   .forEach(o => o.send(JSON.stringify(response)));
     for (const socket of sockets) {
       socket.send(JSON.stringify([users[users.length - 1]]));
     }
@@ -78,23 +73,19 @@ function requestHandler(msg, ws) {
 }
 
 wsServer.on('connection', ws => {
-  // const i = 0;
-  // clients.push(i);
   ws.on('message', msg => requestHandler(msg, ws));
   console.log('OPEN');
-  // ws.on('close', ws => {
-  //   console.log(clients);
-  //   const index = clients[i];
-  //   console.log('Индекс' + index);
-  //   clients.splice(i, 1);
-  //   console.log(users);
-  //   const userOffline = users[index];
-  //   console.log(userOffline);
-  //   users.splice(index, 1);
-  //   [...wsServer.clients]
-  //     .filter(o => o.readyState === WS.OPEN)
-  //     .forEach(o => o.send(JSON.stringify(userOffline)));
-  // });
+  ws.on('close', () => {
+    const index = sockets.indexOf(ws);
+    console.log(index);
+    sockets.splice(index, 1);
+    const userOffline = users[index];
+    users.splice(index, 1);
+    console.log(userOffline);
+    [...wsServer.clients]
+      .filter(o => o.readyState === WS.OPEN)
+      .forEach(o => o.send(JSON.stringify(userOffline)));
+  });
 });
 
 server.listen(port);
