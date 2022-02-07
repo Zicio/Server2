@@ -65,7 +65,7 @@ function requestHandler(msg, ws) {
     //   .filter(o => o.readyState === WS.OPEN)
     //   .forEach(o => o.send(JSON.stringify(response)));
     for (const socket of sockets) {
-      socket.send(JSON.stringify(users[users.length - 1]));
+      socket.send(JSON.stringify([users[users.length - 1]]));
     }
     sockets.push(ws);
     console.log(sockets.length);
